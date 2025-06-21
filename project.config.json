@@ -1,7 +1,8 @@
 {
   "description": "项目配置文件",
   "packOptions": {
-    "ignore": []
+    "ignore": [],
+    "include": []
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
@@ -44,9 +45,19 @@
       }
     ],
     "minifyWXSS": true,
-    "showES6CompileOption": false
+    "showES6CompileOption": false,
+    "compileWorklet": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
-  "appid": "你的小程序appid",
+  "appid": "wx1ad9ae4c82ddc626",
   "libVersion": "2.30.2",
-  "condition": {}
-} 
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
+}

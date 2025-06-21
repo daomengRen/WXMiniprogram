@@ -61,6 +61,8 @@
 
   <!-- 开始训练按钮 -->
   <view class="start-training-btn {{isBaseArt ? 'base-art' : ''}} {{hasSelectedDifficulty ? 'active' : 'disabled'}}" bindtap="startTraining">
+    <image  wx:if="{{hasSelectedDifficulty}}"  class="start-training-btn-icon" src="/images/caret-right-white.svg" alt=""/>
+    <image wx:else  class="start-training-btn-icon" src="/images/caret-right.svg" alt=""/>
     <text>开始训练</text>
   </view>
 
