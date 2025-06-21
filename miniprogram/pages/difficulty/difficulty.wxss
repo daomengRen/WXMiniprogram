@@ -225,18 +225,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  display: none;
   background: rgba(0, 0, 0, 0.5);
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   opacity: 0;
+  visibility: hidden;
   transition: all 0.3s ease;
 }
 
 .modal.show {
   opacity: 1;
-  display: flex;
+  visibility: visible;
 }
 
 .modal-content {
@@ -652,19 +653,12 @@
   position: relative;
   z-index: 1;
 }
-/* 
+
 .start-training-btn text::before {
   content: '▶';
   font-size: 28rpx;
   margin-right: 8rpx;
   animation: pulse 1.5s ease-in-out infinite;
-} */
-
-.start-training-btn-icon {
-  height: 40rpx;
-  width: 40rpx;
-  animation: pulse 1.5s ease-in-out infinite;
-  margin-right: 8rpx;
 }
 
 @keyframes gradientBG {

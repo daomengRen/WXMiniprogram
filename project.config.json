@@ -1,8 +1,7 @@
 {
   "description": "项目配置文件",
   "packOptions": {
-    "ignore": [],
-    "include": []
+    "ignore": []
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
@@ -45,22 +44,9 @@
       }
     ],
     "minifyWXSS": true,
-    "showES6CompileOption": false,
-    "compileWorklet": false,
-    "minifyWXML": true,
-    "localPlugins": false,
-    "disableUseStrict": false,
-    "useCompilerPlugins": false,
-    "condition": true,
-    "swc": false,
-    "disableSWC": true
+    "showES6CompileOption": false
   },
-  "appid": "wx1ad9ae4c82ddc626",
-  "libVersion": "3.8.9",
-  "condition": {},
-  "simulatorPluginLibVersion": {
-    "wxext14566970e7e9f62": "3.6.5-37"
-  },
-  "editorSetting": {},
-  "projectArchitecture": "multiPlatform"
-}
+  "appid": "你的小程序appid",
+  "libVersion": "2.30.2",
+  "condition": {}
+} 

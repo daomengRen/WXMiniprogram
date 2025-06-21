@@ -6,8 +6,7 @@
     "pages/difficulty/difficulty",
     "pages/training/training",
     "pages/artDetail/artDetail",
-    "pages/dailyTraining/dailyTraining",
-    "pages/preview/preview"
+    "pages/dailyTraining/dailyTraining"
   ],
   "window": {
     "backgroundTextStyle": "light",
