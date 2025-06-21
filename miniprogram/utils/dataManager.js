@@ -367,7 +367,7 @@ const DataManager = {
       const jsonStr = JSON.stringify(data, null, 2);
       const now = new Date();
       const beijingTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
-      const fileName = `app_data_${beijingTime.toISOString().split('.')[0].replace(/[:]/g, '-')}.pdf`;
+      const fileName = `app_data_${beijingTime.toISOString().split('.')[0].replace(/[:]/g, '-')}.txt`;
       
       // 创建临时文件
       const fs = wx.getFileSystemManager();
@@ -392,7 +392,7 @@ const DataManager = {
         // 在真机环境中使用 openDocument
         wx.openDocument({
           filePath: tempFilePath,
-          fileType: 'pdf',
+          fileType: 'txt',
           success: (res) => {
             console.log(res);
             console.log('文件打开成功'); 
