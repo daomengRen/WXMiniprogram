@@ -1,0 +1,60 @@
+<view class="container">
+  <view class="arts-list">
+    <view class="art-item {{item.colorClass}}" wx:for="{{arts}}" wx:key="id">
+      <view class="art-main" bindtap="navigateToLevels" data-art="{{item}}">
+        <view class="icon-wrapper">
+          <image class="art-icon" src="{{item.icon}}" mode="aspectFill"></image>
+        </view>
+        <view class="art-info">
+          <text class="art-name">{{item.name}}</text>
+        </view>
+        <view class="art-actions" wx:if="{{!baseArts[item.name]}}">
+          <view class="action-btn edit" catchtap="showEditModal" data-index="{{index}}">
+            <text class="action-icon">✎</text>
+          </view>
+          <view class="action-btn delete" catchtap="deleteArt" data-index="{{index}}">
+            <text class="action-icon">×</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="add-button" bindtap="showAddModal">
+    <text class="add-icon">+</text>
+    <text class="add-text">添加新动作</text>
+  </view>
+
+  <!-- 添加新动作的模态框 -->
+  <view class="modal" wx:if="{{showModal}}">
+    <view class="modal-mask" bindtap="hideModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">{{isEdit ? '编辑动作' : '添加新动作'}}</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">动作名称</text>
+          <input 
+            class="input-field" 
+            placeholder="请输入动作名称" 
+            value="{{newArtName}}"
+            bindinput="onNameInput"
+            maxlength="20"
+          />
+        </view>
+        <view class="icon-preview">
+          <text class="icon-label">动作图标</text>
+          <view class="icon-display">
+            <image src="{{selectedEmoji}}" mode="aspectFill" style="width: 48rpx; height: 48rpx; border-radius: 50%;"></image>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn cancel" bindtap="hideModal">取消</button>
+        <button class="btn confirm" bindtap="confirmAdd">确定</button>
+        
+      </view>
+    </view>
+  </view>
+</view> 

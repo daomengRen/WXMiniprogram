@@ -1,0 +1,445 @@
+<!-- 引入图标字体 -->
+<view class="iconfont-container">
+  <text class="iconfont icon-edit"></text>
+  <text class="iconfont icon-right"></text>
+</view>
+
+<view class="container {{isBaseArt ? 'base-art' : ''}}">
+  <view class="header" style="margin-bottom: 5rpx; padding-bottom: 5rpx;">
+    <image class="art-icon" src="{{level.icon || art.icon}}" mode="aspectFill"></image>
+    <view class="title-container">
+      <view class="title">{{level.name}}</view>
+      <view class="subtitle">{{art.name}}</view>
+    </view>
+  </view>
+  
+  <view class="level-list" style="padding-top: 5rpx;">
+    <view class="level-item {{index === 0 ? 'fade-in' : ''}} {{item.checked ? 'checked' : ''}}" 
+          wx:for="{{difficulties}}" 
+          wx:key="id"
+          style="animation-delay: {{index * 0.1}}s"
+          data-index="{{index}}"
+          bindtap="showEditModal">
+      <view class="level-content">
+        <view class="level-name">
+          {{item.name}}
+          <!-- 基础动作的倒立撑特殊动作 -->
+          <text class="level-details" wx:if="{{isBaseArt && art.id === 6 && (level.id === 1 || level.id === 2 || level.id === 3)}}">
+            <text wx:if="{{item.time > 0}}">{{item.time}}秒</text>
+          </text>
+          <!-- 基础动作的其他动作 -->
+          <text class="level-details" wx:elif="{{isBaseArt && !(art.id === 6 && (level.id === 1 || level.id === 2 || level.id === 3))}}">
+            <text wx:if="{{item.sets > 0}}">{{item.sets}}组</text>
+            <text wx:if="{{item.reps > 0}}">{{item.reps}}次</text>
+          </text>
+          <!-- 自定义难度 -->
+          <text class="level-details" wx:else>
+            <text wx:if="{{item.time > 0}}">{{item.time}}秒</text>
+            <text wx:elif="{{item.sets > 0 || item.reps > 0}}">
+              <text wx:if="{{item.sets > 0}}">{{item.sets}}组</text>
+              <text wx:if="{{item.reps > 0}}">{{item.reps}}次</text>
+            </text>
+          </text>
+        </view>
+      </view>
+      <view class="action-btn delete" catchtap="deleteDifficulty" data-index="{{index}}" wx:if="{{!isBaseArt}}">
+        <text class="action-icon">×</text>
+      </view>
+      <view class="checkbox-wrapper" catchtap="toggleCheck" data-index="{{index}}">
+        <view class="checkbox {{item.checked ? 'checked' : ''}}">
+          <text class="check-icon" wx:if="{{item.checked}}">✓</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增难度按钮 -->
+  <view class="add-difficulty-btn" bindtap="showAddDifficultyModal" wx:if="{{!isBaseArt}}">
+    <text class="con-add">+</text>
+    <text class="add-text">添加难度</text>
+  </view>
+
+  <!-- 开始训练按钮 -->
+  <view class="start-training-btn {{isBaseArt ? 'base-art' : ''}} {{hasSelectedDifficulty ? 'active' : 'disabled'}}" bindtap="startTraining">
+    <image  wx:if="{{hasSelectedDifficulty}}"  class="start-training-btn-icon" src="/images/caret-right-white.svg" alt=""/>
+    <image wx:else  class="start-training-btn-icon" src="/images/caret-right.svg" alt=""/>
+    <text>开始训练</text> 
+  </view>
+
+  <!-- 设置弹窗 -->
+  <view class="modal {{showModal ? 'show' : ''}}" wx:if="{{showModal}}">
+    <view class="modal-mask" bindtap="hideModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">{{editDifficulty.name}}</text>
+        <view class="close-button" bindtap="hideModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="setting-section">
+          <view class="setting-title">可调整参数</view>
+          
+          <!-- 非基础动作 -->
+          <block wx:if="{{!isBaseArt}}">
+            <!-- 组数和次数设置 -->
+            <view class="setting-item">
+              <view class="setting-label">
+                <text class="setting-icon">📊</text>
+                <text>组数</text>
+              </view>
+              <view class="setting-input">
+                <input class="input" 
+                      type="number" 
+                      value="{{editDifficulty.sets}}"
+                      bindinput="onSetsInput"/>
+                <text class="unit">组</text>
+              </view>
+            </view>
+
+            <view class="setting-item">
+              <view class="setting-label">
+                <text class="setting-icon">🔄</text>
+                <text>次数</text>
+              </view>
+              <view class="setting-input">
+                <input class="input" 
+                      type="number" 
+                      value="{{editDifficulty.reps}}"
+                      bindinput="onRepsInput"/>
+                <text class="unit">次</text>
+              </view>
+            </view>
+          
+            <!-- 次数间隔和组间休息 -->
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">⏱️</text>
+              <text>次数间隔</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{editDifficulty.interval}}"
+                    bindinput="onIntervalInput"/>
+              <text class="unit">秒</text>
+            </view>
+          </view>
+          
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">⏰</text>
+              <text>组间休息</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{editDifficulty.rest}}"
+                    bindinput="onRestInput"/>
+              <text class="unit">秒</text>
+            </view>
+          </view>
+          
+            <!-- 时间设置 -->
+            <view class="setting-item">
+              <view class="setting-label">
+                <text class="setting-icon">⏳</text>
+                <text>时间</text>
+              </view>
+              <view class="setting-input">
+                <input class="input" 
+                      type="number" 
+                      value="{{editDifficulty.time}}"
+                      bindinput="onTimeInput"/>
+                <text class="unit">秒</text>
+              </view>
+            </view>
+          </block>
+
+          <!-- 基础动作 -->
+          <block wx:else>
+            <!-- 自由难度 -->
+            <block wx:if="{{editIndex === 3}}">
+              <!-- 倒立撑的特殊动作 -->
+              <block wx:if="{{art.id === 6 && (level.id === 1 || level.id === 2 || level.id === 3)}}">
+                <!-- 只显示时间和语音类型 -->
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">⏳</text>
+                    <text>时间</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.time}}"
+                          bindinput="onTimeInput"/>
+                    <text class="unit">秒</text>
+                  </view>
+                </view>
+              </block>
+              <!-- 其他基础动作的自由难度 -->
+              <block wx:else>
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">📊</text>
+                    <text>组数</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.sets}}"
+                          bindinput="onSetsInput"/>
+                    <text class="unit">组</text>
+                  </view>
+                </view>
+
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">🔄</text>
+                    <text>次数</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.reps}}"
+                          bindinput="onRepsInput"/>
+                    <text class="unit">次</text>
+                  </view>
+                </view>
+
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">⏱️</text>
+                    <text>次数间隔</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.interval}}"
+                          bindinput="onIntervalInput"/>
+                    <text class="unit">秒</text>
+                  </view>
+                </view>
+                
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">⏰</text>
+                    <text>组间休息</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.rest}}"
+                          bindinput="onRestInput"/>
+                    <text class="unit">秒</text>
+                  </view>
+                </view>
+              </block>
+            </block>
+
+            <!-- 基础动作的初级、中级、高级难度 -->
+            <block wx:else>
+              <!-- 倒立撑的特殊动作 -->
+              <block wx:if="{{art.id === 6 && (level.id === 1 || level.id === 2 || level.id === 3)}}">
+                <!-- 只显示语音类型 -->
+              </block>
+              <!-- 其他基础动作 -->
+              <block wx:else>
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">⏱️</text>
+                    <text>次数间隔</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.interval}}"
+                          bindinput="onIntervalInput"/>
+                    <text class="unit">秒</text>
+                  </view>
+                </view>
+                
+                <view class="setting-item">
+                  <view class="setting-label">
+                    <text class="setting-icon">⏰</text>
+                    <text>组间休息</text>
+                  </view>
+                  <view class="setting-input">
+                    <input class="input" 
+                          type="number" 
+                          value="{{editDifficulty.rest}}"
+                          bindinput="onRestInput"/>
+                    <text class="unit">秒</text>
+                  </view>
+                </view>
+              </block>
+            </block>
+          </block>
+
+          <!-- 语音类型设置（所有情况都显示） -->
+          <view class="setting-item voice-setting">
+            <view class="voice-options">
+              <view class="voice-option {{editDifficulty.voiceType === 'system' ? 'active' : ''}}" 
+                    bindtap="onVoiceTypeSelect" 
+                    data-type="system">
+                <view class="voice-content">
+                  <text class="voice-icon">🔊</text>
+                  <view class="voice-info">
+                    <text class="voice-title">系统音</text>
+                  </view>
+                </view>
+                <view class="voice-check"></view>
+              </view>
+              <view class="voice-option {{editDifficulty.voiceType === 'human' ? 'active' : ''}}" 
+                    bindtap="onVoiceTypeSelect" 
+                    data-type="human">
+                <view class="voice-content">
+                  <text class="voice-icon">👤</text>
+                  <view class="voice-info">
+                    <text class="voice-title">人声</text>
+                  </view>
+                </view>
+                <view class="voice-check"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="cancel-button" bindtap="hideModal">取消</button>
+        <button class="confirm-button" bindtap="saveSettings">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增难度弹窗 -->
+  <view class="modal {{showAddModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="hideAddModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">新增难度</text>
+        <view class="close-button" bindtap="hideAddModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="setting-section">
+          <view class="setting-title">难度信息</view>
+          
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">📝</text>
+              <text>难度名称</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="text" 
+                    value="{{newDifficulty.name}}"
+                    bindinput="onNewNameInput"/>
+              <text class="unit empty-unit"> </text>
+            </view>
+          </view>
+
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">📊</text>
+              <text>组数</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{newDifficulty.sets}}"
+                    bindinput="onNewSetsInput"
+                    bindblur="onNewSetsBlur"/>
+              <text class="unit">组</text>
+            </view>
+          </view>
+
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">🔄</text>
+              <text>次数</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{newDifficulty.reps}}"
+                    bindinput="onNewRepsInput"/>
+              <text class="unit">次</text>
+            </view>
+          </view>
+          
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">⏱️</text>
+              <text>次数间隔</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{newDifficulty.interval}}"
+                    bindinput="onNewIntervalInput"/>
+              <text class="unit">秒</text>
+            </view>
+          </view>
+          
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">⏰</text>
+              <text>组间休息</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{newDifficulty.rest}}"
+                    bindinput="onNewRestInput"/>
+              <text class="unit">秒</text>
+            </view>
+          </view>
+          
+          <!-- 时间设置 -->
+          <view class="setting-item">
+            <view class="setting-label">
+              <text class="setting-icon">⏳</text>
+              <text>时间</text>
+            </view>
+            <view class="setting-input">
+              <input class="input" 
+                    type="number" 
+                    value="{{newDifficulty.time}}"
+                    bindinput="onNewTimeInput"/>
+              <text class="unit">秒</text>
+            </view>
+          </view>
+          
+          <view class="setting-item voice-setting">
+            <view class="voice-options">
+              <view class="voice-option {{newDifficulty.voiceType === 'system' ? 'active' : ''}}" 
+                    bindtap="onNewVoiceTypeSelect" 
+                    data-type="system">
+                <view class="voice-content">
+                  <text class="voice-icon">🔊</text>
+                  <view class="voice-info">
+                    <text class="voice-title">系统音</text>
+                  </view>
+                </view>
+                <view class="voice-check"></view>
+              </view>
+              <view class="voice-option {{newDifficulty.voiceType === 'human' ? 'active' : ''}}" 
+                    bindtap="onNewVoiceTypeSelect" 
+                    data-type="human">
+                <view class="voice-content">
+                  <text class="voice-icon">👤</text>
+                  <view class="voice-info">
+                    <text class="voice-title">人声</text>
+                  </view>
+                </view>
+                <view class="voice-check"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="cancel-button" bindtap="hideAddModal">取消</button>
+        <button class="confirm-button" bindtap="saveNewDifficulty">确定</button>
+      </view>
+    </view>
+  </view>
+</view> 

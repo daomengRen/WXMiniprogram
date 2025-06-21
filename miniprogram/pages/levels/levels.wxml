@@ -1,0 +1,66 @@
+<view class="container">
+  <view class="header">
+    <image class="art-icon" src="{{art.icon}}" mode="aspectFill"></image>
+    <view class="title-container">
+      <view class="title">{{art.name}}</view>
+    </view>
+  </view>
+  
+  <view class="level-list">
+    <view class="level-item {{index === 0 ? 'fade-in' : ''}}" 
+          wx:for="{{art.levels}}" 
+          wx:key="id"
+          style="animation-delay: {{index * 0.1}}s"
+          bindtap="navigateToDetail"
+          data-level="{{item}}">
+      <view class="level-content">
+        <view class="level-info">
+          <view class="level-name-row">
+            <text class="level-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="art-actions" wx:if="{{!isBaseArt}}">
+        <view class="action-btn edit" catchtap="showEditLevelModal" data-level="{{item}}">
+          <text class="action-icon">✎</text>
+        </view>
+        <view class="action-btn delete" catchtap="deleteLevel" data-level="{{item}}">
+          <text class="action-icon">×</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加具体动作按钮，只在自定义动作时显示 -->
+  <view class="add-level-button" bindtap="showAddLevelModal" wx:if="{{!isBaseArt}}">
+    <text class="add-icon">+</text>
+    <text class="add-text">添加具体动作</text>
+  </view>
+
+  <!-- 添加具体动作的模态框 -->
+  <view class="modal {{showModal ? 'show' : ''}}" wx:if="{{showModal}}">
+    <view class="modal-mask" bindtap="hideModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">添加具体动作</text>
+        <view class="close-button" bindtap="hideModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">动作名称</text>
+          <input 
+            class="input-field" 
+            placeholder="请输入动作名称" 
+            value="{{newLevelName}}"
+            bindinput="onLevelNameInput"
+            maxlength="20"
+          />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn cancel" bindtap="hideModal">取消</button>
+        <button class="btn confirm" bindtap="confirmAddLevel">确定</button>
+      </view>
+    </view>
+  </view>
+</view> 

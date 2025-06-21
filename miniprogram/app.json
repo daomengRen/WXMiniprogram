@@ -1,0 +1,52 @@
+{
+  "pages": [
+    "pages/arts/arts",
+    "pages/achievements/achievements",
+    "pages/levels/levels",
+    "pages/difficulty/difficulty",
+    "pages/training/training",
+    "pages/artDetail/artDetail",
+    "pages/dailyTraining/dailyTraining",
+    "pages/preview/preview"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "囚徒健身",
+    "navigationBarTextStyle": "black",
+    "pageOrientation": "auto",
+    "animation": {
+      "duration": 200,
+      "timingFunc": "easeInOut"
+    }
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1296db",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/arts/arts",
+        "text": "六艺",
+        "iconPath": "/images/tabbar/arts.png",
+        "selectedIconPath": "/images/tabbar/arts-active.png"
+      },
+      {
+        "pagePath": "pages/dailyTraining/dailyTraining",
+        "text": "训练",
+        "iconPath": "/images/tabbar/training.png",
+        "selectedIconPath": "/images/tabbar/training-active.png"
+      },
+      {
+        "pagePath": "pages/achievements/achievements",
+        "text": "成就",
+        "iconPath": "/images/tabbar/achievement.png",
+        "selectedIconPath": "/images/tabbar/achievement-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+} 

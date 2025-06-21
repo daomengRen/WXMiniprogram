@@ -1,0 +1,52 @@
+<!--pages/dailyTraining/dailyTraining.wxml-->
+<view class="container">
+  <view class="section">
+    <view class="section-title">训练日历</view>
+    <view class="calendar-container">
+      <picker mode="date" fields="month" value="{{currentDate}}" bindchange="onDateChange">
+        <view class="calendar-header">
+          <view class="calendar-month">
+            <text>{{currentYear}}年{{currentMonth}}月</text>
+            <text class="calendar-arrow">▼</text>
+          </view>
+        </view>
+      </picker>
+      <view class="calendar-body">
+        <view class="weekdays">
+          <text wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this" class="weekday">{{item}}</text>
+        </view>
+        <view class="days">
+          <block wx:for="{{days}}" wx:key="date">
+            <view class="day {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isToday ? 'today' : ''}} {{item.hasTraining ? 'has-training' : ''}} {{item.date === selectedDate ? 'selected' : ''}}"
+                  bindtap="onDayTap" data-date="{{item.date}}">
+              <text>{{item.day}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">训练记录</view>
+    <view class="training-list">
+      <block wx:if="{{dailyTrainings.length > 0}}">
+        <view class="training-item" wx:for="{{dailyTrainings}}" wx:key="startTime">
+          <view class="training-header">
+            <text class="training-time">{{item.startTime}}</text>
+          </view>
+          <view class="training-content">
+            <view class="training-info">
+              <text class="training-name">{{item.artName}} - {{item.levelName}} - {{item.difficultyName}}</text>
+              <text class="training-detail" wx:if="{{item.time > 0}}">时间：{{item.time}}秒</text>
+              <text class="training-detail" wx:else>组数：{{item.totalSets}} × {{item.totalCount}}次</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="no-training" wx:else>
+        <text>当天暂无训练记录</text>
+      </view>
+    </view>
+  </view>
+</view> 

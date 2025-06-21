@@ -1,0 +1,60 @@
+<view class="container">
+  <!-- 动作信息 -->
+  <view class="exercise-info">
+    <text class="exercise-name">{{art.name}} - {{level.name}} - {{selectedDifficulty.name}}</text>
+  </view>
+
+  <!-- 训练信息显示区域 -->
+  <view class="training-info">
+    <!-- 基础动作的倒立撑特殊动作 -->
+    <block wx:if="{{isBaseArt && art.id === 6 && (level.id === 1 || level.id === 2 || level.id === 3)}}">
+      <view class="info-item">
+        <text class="label">时间：</text>
+        <text class="value">{{selectedDifficulty.time}}秒</text>
+      </view>
+    </block>
+    <!-- 基础动作的其他动作 -->
+    <block wx:elif="{{isBaseArt && !(art.id === 6 && (level.id === 1 || level.id === 2 || level.id === 3))}}">
+      <view class="info-item">
+        <text class="label">组数：</text>
+        <text class="value">{{currentSet}}/{{totalSets}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">次数：</text>
+        <text class="value">{{currentCount}}/{{totalCount}}</text>
+      </view>
+    </block>
+    <!-- 自定义难度 -->
+    <block wx:else>
+      <block wx:if="{{selectedDifficulty.time > 0}}">
+        <view class="info-item">
+          <text class="label">时间：</text>
+          <text class="value">{{selectedDifficulty.time}}秒</text>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="info-item">
+          <text class="label">组数：</text>
+          <text class="value">{{currentSet}}/{{totalSets}}</text>
+        </view>
+        <view class="info-item">
+          <text class="label">次数：</text>
+          <text class="value">{{currentCount}}/{{totalCount}}</text>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <!-- 倒计时/训练状态显示 -->
+  <view class="timer-container">
+    <text class="timer {{status === 'preparing' ? 'preparing' : ''}}">{{timerText}}</text>
+    <text class="status-text">{{statusText}}</text>
+  </view>
+
+  <!-- 控制按钮区域 -->
+  <view class="control-buttons">
+    <button class="btn start-btn" bindtap="startTraining" wx:if="{{status === 'idle'}}">开始训练</button>
+    <button class="btn stop-btn" bindtap="stopTraining" wx:if="{{status !== 'idle' && status !== 'finished'}}">停止</button>
+    <button class="btn reset-btn" bindtap="resetTraining">重置</button>
+  </view>
+</view> 

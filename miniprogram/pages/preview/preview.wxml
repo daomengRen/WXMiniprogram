@@ -1,0 +1,6 @@
+<view class="container">
+  <web-view src="{{htmlContent}}"></web-view>
+  <view>
+    <span>{{decodeContent}}</span>
+  </view>
+</view>
